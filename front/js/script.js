@@ -32,5 +32,4 @@ function genererProduits(products) {
         produitElement.appendChild(descriptionElement)
     }
 }
-
 genererProduits(products)
