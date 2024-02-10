@@ -9,8 +9,7 @@ function genererProduits(products) {
         const sectionFichesProduits = document.querySelector(".items")
         // // Création d’une balise dédiée au lien vers le produits
         const lienProduits = document.createElement("a")
-        // lienProduits = 
-
+        lienProduits.href = `./product.html?id=${article._id}`
         // Création d’une balise dédiée à un produit
         const produitElement = document.createElement("article")
         
