@@ -32,7 +32,6 @@ descriptionProduct.innerText = product.description
         sectionColors.appendChild(optionProduct)
     }
 
-
 // Gestion du produit au sein du panier   
 // Cette fonction permet d'enregister le panier dans le local Storage
 function saveBasket(product){
@@ -42,21 +41,6 @@ function saveBasket(product){
 function getBasket(){
     return JSON.parse(localStorage.getItem ("Basket")) || []
 }
-
-// // Cette fonction verifier la quantité
-// function checkQuantity(){
-//     quantity.addEventListener("change", (event)=>{ 
-//         console.log(event)
-//         let quantityValue = event.target.valueAsNumber
-//         console.log(quantityValue)
-//         let regex = new RegExp(/^\d+$/)
-//        if (regex.test(quantityValue) && (quantityValue) <= 100 ) {
-//         x = true
-//        } 
-//        return x
-//     })
-// }
-
 
 // Cette fonction permet de rajouter le produit dans le panier ou augmente le quantité s'il existe
 function addBasket(product){
@@ -74,11 +58,12 @@ function addBasket(product){
                     product.quantity = quantityValue
                     basket.push(product)
                 }
+                // On sauvegarde le nouveau panier
+                saveBasket(basket)
+                // alert("Vous avez ajouté un/des article(s) dans votre panier")
     }else{
         alert("Veuillez entrer un nombre d'article (1-100)")
     }
-    // On sauvegarde le nouveau panier
-    saveBasket(basket)
 }
 
 // On recupèrer la balise du DOM qui gerer l'ajout au panier
