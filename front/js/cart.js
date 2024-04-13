@@ -1,4 +1,4 @@
-/***** Déclaratin des variable globale */
+/***** Déclaratin des variables globale */
 let totalPrice = 0
 let totalQuantity = 0
 
@@ -83,7 +83,7 @@ async function infoAPIProduct(product) {
   changeQuantity(product, products)
 }
 
-// Gesion de le suprission de l'article qui contient un produit
+// Gestion de le supression de l'article qui contient un produit
 function removeArticleProduct(product, products, btn) {
   // Récupération du panier dans le localStotrage
   let basket = JSON.parse(localStorage.getItem("Basket"))
@@ -154,7 +154,7 @@ function changeQuantity(product, products) {
   })
 }
 
-function genererProductBasket(products) {
+function generateProductBasket(products) {
   // Récupération de l'élement du DOM ou le(s) produit(s) du panier seront insérer
   const sectionProducts = document.getElementById("cart__items")
   // On parcouru le panier recuperer
@@ -177,12 +177,10 @@ function genererProductBasket(products) {
 // Récupération du panier dans le localStotrage
 let basket = JSON.parse(localStorage.getItem("Basket"))
 
-genererProductBasket(basket)
+generateProductBasket(basket)
 
-//Gestion de la commande de l'utilisateur
-
-// Gestion du nom et du prémon de l'utilisateur
-function validerIdentité(chaine) {
+// Vérification de la validaté du nom et du prémon de l'utilisateur
+function checkIdentity(chaine) {
   let chaineDiv = chaine.closest("div")
   let baliseError = chaineDiv.lastElementChild
   baliseError.innerText = ""
@@ -195,8 +193,8 @@ function validerIdentité(chaine) {
   return validString
 }
 
-// Gestion de la ville et de l'adresse de l'utilisateur
-function validerChaine(chaine) {
+// Vérification de la validaté de la ville et de l'adresse de l'utilisateur
+function checkString(chaine) {
   let chaineDiv = chaine.closest("div")
   let baliseError = chaineDiv.lastElementChild
   baliseError.innerText = ""
@@ -209,7 +207,7 @@ function validerChaine(chaine) {
 }
 
 // Gestion du format de l'email de l'utilisation
-function validerEmail(email) {
+function checkEmail(email) {
   let emailDiv = email.closest("div")
   let emailBaliseError = emailDiv.lastElementChild
   emailBaliseError.innerText = ""
@@ -222,27 +220,73 @@ function validerEmail(email) {
   return validString
 }
 
+// Création du tableau de produit(s) commandé(s)
+function generateArrayProducts() {
+  // On initailise le tableau de Produits
+  let arrayProducts = []
+  // on recupere l'ensemble des articles 
+  const articles = document.querySelectorAll("article")
+  //on rajoute chaque id de produit dans le tabeau
+  for (let i = 0; i < articles.length; i++) {
+    const articleId = articles[i].dataset.id
+    arrayProducts.push(articleId)
+  }
+  return arrayProducts
+}
+
+// Gestion de l'envoi du formulaire : validité des informations utilisateurs et récupération du numéro de commmande
 function gererFormulaire() {
   // Récuperation de l'élement du DOM du formulaire de commande
   let form = document.querySelector("form")
+  // On ecoute l'envoi du formuaire
   form.addEventListener("submit", (event) => {
-      event.preventDefault()
-      let prenom = document.getElementById("firstName")
-      let nom = document.getElementById("lastName")
-      let email = document.getElementById("email")
-      let adresse = document.getElementById("address")
-      let ville = document.getElementById("city")
+    event.preventDefault()
+    // Récupération des éléments du DOM qui contiennent les données de l'utilisateur
+    let prenom = document.getElementById("firstName")
+    let nom = document.getElementById("lastName")
+    let adresse = document.getElementById("address")
+    let ville = document.getElementById("city")
+    let email = document.getElementById("email")
+    // Vérification de la validité des données utilisateurs
+    let prenomValide = checkIdentity(prenom)
+    let nomValide = checkIdentity(nom)
+    let adresseValide = checkString(adresse)
+    let villeValide = checkString(ville)
+    let emailValide = checkEmail(email)
 
-      let prenomValide = validerIdentité(prenom)
-      let nomValide = validerIdentité(nom)
-      let adresseValide = validerChaine(adresse)
-      let villeValide = validerChaine(ville)
-      let emailValide = validerEmail(email)
-      if ( prenomValide && nomValide && adresseValide && villeValide && emailValide){
-        console.log("On peut commande")
-      }else{
-        console.log("No commande")
+    if (prenomValide && nomValide && adresseValide && villeValide && emailValide) {
+      // Récupération de la liste de produit(s) commandé(s)
+      let listProducts = generateArrayProducts()
+      // Création de l'objet qui contient le données de l'objet contact et de la liste d'Id des produits commandés
+      const objCommand = {
+        "contact": {
+          firstName: prenom.value,
+          lastName: nom.value,
+          address: adresse.value,
+          city: ville.value,
+          email: email.value,
+        },
+        "products": listProducts
       }
+      // Création de la charge utile au format JSON
+      const chargeUtile = JSON.stringify(objCommand)
+      // Envoi des information de la commande à l'API
+      const response = fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: chargeUtile
+      })
+      .then(response => response.json())
+      //Récupération du numero de commande de la reponse
+      .then(data =>{
+        console.log("Commande n° : " + data.orderId)
+        const orderId = data.orderId
+        // Redirection de l'utilisateur vers la page de confirmation. Le numéro de commande est inscrit dans l'adresse
+        window.location.href = `./confirmation.html?id=${orderId}`
+      })
+    } else {
+      alert("Vérifier que toutes vos informations soient valides ")
+    }
   })
 }
 
