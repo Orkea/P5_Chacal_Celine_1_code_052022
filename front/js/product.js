@@ -80,6 +80,7 @@ btnAddBasket.addEventListener("click", (event)=>{
             quantity: document.getElementById("quantity").valueAsNumber
         }
         addBasket(productBasket)
+        alert("Votre article  a été ajouter dans votre panier")
     }else{
         alert("Veuillez sélectionnez une couleur")
     }

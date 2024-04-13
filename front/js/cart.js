@@ -116,7 +116,6 @@ function removeProduct(product, products) {
     removeArticleProduct(product, products, btndDelete)
   })
 }
-
 // Gestion du changement de produit
 function changeQuantity(product, products) {
   const btnChange = document.querySelector(`article[data-id="${product.id}"][data-color="${product.color}"] ` + `input`)
@@ -153,7 +152,6 @@ function changeQuantity(product, products) {
     }
   })
 }
-
 function generateProductBasket(products) {
   // Récupération de l'élement du DOM ou le(s) produit(s) du panier seront insérer
   const sectionProducts = document.getElementById("cart__items")
@@ -181,29 +179,35 @@ generateProductBasket(basket)
 
 // Vérification de la validaté du nom et du prémon de l'utilisateur
 function checkIdentity(chaine) {
-  let chaineDiv = chaine.closest("div")
-  let baliseError = chaineDiv.lastElementChild
-  baliseError.innerText = ""
-  let validString = true
-  let chaineRegExp = new RegExp("[a-zA-ZÀ-ÿ\-']{2,}")
-  if (!chaineRegExp.test(chaine.value)) {
-    baliseError.innerText = `Le champ ${(chaineDiv.innerText).slice(0, -1)} n'est pas valide`
-    validString = false
-  }
+  chaine.addEventListener("change",(event)=>{
+    event.preventDefault()
+    let chaineDiv = chaine.closest("div")
+    let baliseError = chaineDiv.lastElementChild
+    baliseError.innerText = ""
+    let validString = true
+    let chaineRegExp = new RegExp("[a-zA-ZÀ-ÿ\-']{2,}")
+    if (!chaineRegExp.test(chaine.value)) {
+      baliseError.innerText = `Le champ ${(chaineDiv.innerText).slice(0, -1)} n'est pas valide`
+      validString = false
+    }
   return validString
+  })
 }
 
 // Vérification de la validaté de la ville et de l'adresse de l'utilisateur
 function checkString(chaine) {
-  let chaineDiv = chaine.closest("div")
-  let baliseError = chaineDiv.lastElementChild
-  baliseError.innerText = ""
-  let validString = true
-  if (chaine.value.length < 2) {
-    baliseError.innerText = `Le champ ${(chaineDiv.innerText).slice(0, -1)} est trop court.`
-    validString = false
-  }
-  return validString
+  chaine.addEventListener("input",(event)=>{
+    event.preventDefault()
+    let chaineDiv = chaine.closest("div")
+    let baliseError = chaineDiv.lastElementChild
+    baliseError.innerText = ""
+    let validString = true
+    if (chaine.value.length <= 5) {
+      baliseError.innerText = `Le champ ${(chaineDiv.innerText).slice(0, -1)} est trop court.`
+      validString = false
+    }
+    return validString
+  })
 }
 
 // Gestion du format de l'email de l'utilisation
@@ -236,26 +240,27 @@ function generateArrayProducts() {
 
 // Gestion de l'envoi du formulaire : validité des informations utilisateurs et récupération du numéro de commmande
 function gererFormulaire() {
+  let adresse = document.getElementById("address")
+  // Récupération des éléments du DOM qui contiennent les données de l'utilisateur
+  let prenom = document.getElementById("firstName")
+  let nom = document.getElementById("lastName")
+  let email = document.getElementById("email")
+  let ville = document.getElementById("city")
+  // Vérification de la validité des données utilisateurs
+  let prenomValide = checkIdentity(prenom)
+  let nomValide = checkIdentity(nom)
+  let adresseValide = checkString(adresse)
+  let villeValide = checkString(ville)
+  let emailValide = checkEmail(email)
+  
   // Récuperation de l'élement du DOM du formulaire de commande
   let form = document.querySelector("form")
   // On ecoute l'envoi du formuaire
   form.addEventListener("submit", (event) => {
     event.preventDefault()
-    // Récupération des éléments du DOM qui contiennent les données de l'utilisateur
-    let prenom = document.getElementById("firstName")
-    let nom = document.getElementById("lastName")
-    let adresse = document.getElementById("address")
-    let ville = document.getElementById("city")
-    let email = document.getElementById("email")
-    // Vérification de la validité des données utilisateurs
-    let prenomValide = checkIdentity(prenom)
-    let nomValide = checkIdentity(nom)
-    let adresseValide = checkString(adresse)
-    let villeValide = checkString(ville)
-    let emailValide = checkEmail(email)
-
     if (prenomValide && nomValide && adresseValide && villeValide && emailValide) {
-      // Récupération de la liste de produit(s) commandé(s)
+      console.log("On commande")
+    // Récupération de la liste de produit(s) commandé(s)
       let listProducts = generateArrayProducts()
       // Création de l'objet qui contient le données de l'objet contact et de la liste d'Id des produits commandés
       const objCommand = {
@@ -285,7 +290,7 @@ function gererFormulaire() {
         window.location.href = `./confirmation.html?id=${orderId}`
       })
     } else {
-      alert("Vérifier que toutes vos informations soient valides ")
+      alert("Vérifiez que toutes vos informations soient valides ")
     }
   })
 }
