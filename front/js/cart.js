@@ -179,35 +179,37 @@ generateProductBasket(basket)
 
 // Vérification de la validaté du nom et du prémon de l'utilisateur
 function checkIdentity(chaine) {
+  let chaineDiv = chaine.closest("div")
+  let baliseError = chaineDiv.lastElementChild
+  baliseError.innerText = ""
+  let validString = true
+  let chaineRegExp = new RegExp("[a-zA-ZÀ-ÿ\-']{2,}")
   chaine.addEventListener("change",(event)=>{
     event.preventDefault()
-    let chaineDiv = chaine.closest("div")
-    let baliseError = chaineDiv.lastElementChild
     baliseError.innerText = ""
-    let validString = true
-    let chaineRegExp = new RegExp("[a-zA-ZÀ-ÿ\-']{2,}")
     if (!chaineRegExp.test(chaine.value)) {
       baliseError.innerText = `Le champ ${(chaineDiv.innerText).slice(0, -1)} n'est pas valide`
       validString = false
     }
-  return validString
   })
+  return validString
 }
 
-// Vérification de la validaté de la ville et de l'adresse de l'utilisateur
+// Vérification de la validité de la ville et de l'adresse de l'utilisateur
 function checkString(chaine) {
+  let chaineDiv = chaine.closest("div")
+  let baliseError = chaineDiv.lastElementChild
+  baliseError.innerText = ""
+  let validString = true
   chaine.addEventListener("input",(event)=>{
     event.preventDefault()
-    let chaineDiv = chaine.closest("div")
-    let baliseError = chaineDiv.lastElementChild
     baliseError.innerText = ""
-    let validString = true
-    if (chaine.value.length <= 5) {
+    if ((chaine.value).trim().length <= 2) {
       baliseError.innerText = `Le champ ${(chaineDiv.innerText).slice(0, -1)} est trop court.`
       validString = false
     }
-    return validString
   })
+  return validString
 }
 
 // Gestion du format de l'email de l'utilisation
@@ -217,10 +219,14 @@ function checkEmail(email) {
   emailBaliseError.innerText = ""
   let validString = true
   let emailRegExp = new RegExp("[a-zA-Z0-9._-]+@[a-z0-9._-]+\\.[a-z0-9._-]+")
-  if (!emailRegExp.test(email.value)) {
-    emailBaliseError.innerText = "L'email n'est pas valide."
-    validString = false
-  }
+  email.addEventListener("change",(event)=>{
+    event.preventDefault()
+    emailBaliseError.innerText = ""
+    if (!emailRegExp.test(email.value)) {
+      emailBaliseError.innerText = "L'email n'est pas valide."
+      validString = false
+    }
+  })
   return validString
 }
 
@@ -239,22 +245,23 @@ function generateArrayProducts() {
 }
 
 // Gestion de l'envoi du formulaire : validité des informations utilisateurs et récupération du numéro de commmande
-function gererFormulaire() {
-  let adresse = document.getElementById("address")
+function gererFormulaire() { 
   // Récupération des éléments du DOM qui contiennent les données de l'utilisateur
   let prenom = document.getElementById("firstName")
   let nom = document.getElementById("lastName")
-  let email = document.getElementById("email")
+  let adresse = document.getElementById("address")
   let ville = document.getElementById("city")
+  let email = document.getElementById("email")
   // Vérification de la validité des données utilisateurs
   let prenomValide = checkIdentity(prenom)
   let nomValide = checkIdentity(nom)
   let adresseValide = checkString(adresse)
   let villeValide = checkString(ville)
   let emailValide = checkEmail(email)
-  
+
   // Récuperation de l'élement du DOM du formulaire de commande
   let form = document.querySelector("form")
+  
   // On ecoute l'envoi du formuaire
   form.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -293,6 +300,6 @@ function gererFormulaire() {
       alert("Vérifiez que toutes vos informations soient valides ")
     }
   })
-}
+}    
 
 gererFormulaire()
