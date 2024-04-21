@@ -5,7 +5,7 @@ let productId = productUrl.searchParams.get("id")
 // Récupération des détails d'un produit
 const reponse = await fetch("http://localhost:3000/api/products/" + productId)
 const product = await reponse.json()
-// Récupération de l'élements du DOM qui acueillent le logo d'un canapé
+// Récupération de l'élements du D.O.M qui acueillent le logo d'un canapé
 const logo = document.querySelector(".item__img")
 const logoProduct = document.createElement("img")
 logoProduct.src = product.imageUrl
@@ -20,9 +20,9 @@ priceProduct.innerText = product.price
 const descriptionProduct = document.getElementById("description")
 descriptionProduct.innerText = product.description
 // On rajoute les couleurs
-    // On recupere la liste des couleurs
+    // On récuèere la liste des couleurs
     const colorsProduct = product.colors
-    // on récupere l'élement du DOM qui accueille les couleurs
+    // On récupere l'élement du D.O.M. qui accueille les couleurs
     const sectionColors = document.getElementById("colors")
     for(let i=0; i<colorsProduct.length; i++){
         // On ajoute la balise option avec sa couleur
@@ -42,14 +42,14 @@ function getBasket(){
     return JSON.parse(localStorage.getItem ("Basket")) || []
 }
 
-// Cette fonction permet de rajouter le produit dans le panier ou augmente le quantité s'il existe
+// Cette fonction permet de rajouter le produit dans le panier ou augmenter le quantitée s'il existe deja
 function addBasket(product){
-    // On recupèrer le panier
+    // On recupère le panier du localStorage
     let basket = getBasket()
     let quantity = document.getElementById("quantity")
     let quantityValue = quantity.valueAsNumber
     let color = document.getElementById("colors").value
-    // On cherche dans le panier si le produit existe
+    // On cherche dans le panier s'il y'a un produit ayant le même id et la même couleur
     let foundProduct = basket.find(p => p.id === productId && p.color === color)
     if(quantityValue > 0 && quantityValue <= 100 ){
         if (foundProduct !== undefined) {
@@ -66,12 +66,13 @@ function addBasket(product){
     }
 }
 
-// On recupèrer la balise du DOM qui gerer l'ajout au panier
+// On recupère la balise du D.O.M. qui gérer l'ajout au panier
 const btnAddBasket = document.querySelector("button")
-//On ecoute le click sur le btn "Ajouter au panier"
+//On écoute le click sur le btn "Ajouter au panier"
 btnAddBasket.addEventListener("click", (event)=>{
     event.preventDefault()
     let color = document.getElementById("colors").value
+    // On prend en compte la présence d'une option de personalisation du produit
     if (color !== ""){
         //On crée le produit à ajouter
         const productBasket = {
