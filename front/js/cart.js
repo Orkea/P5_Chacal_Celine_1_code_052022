@@ -1,9 +1,9 @@
-/***** Déclaratin des variables globale */
+/*****Déclaratin des variables globale */
 let totalPrice = 0
 let totalQuantity = 0
 
 // Récupération des informations du produit à partir de l'api
-async function infoAPIProduct(product) {
+async function infoAPIProduct(product){
   const reponse = await fetch("http://localhost:3000/api/products/" + product.id)
   const productAPI = await reponse.json()
   // Récupération de l'element du Dom ou va étre insere l'image
@@ -11,7 +11,7 @@ async function infoAPIProduct(product) {
   // Création de la div de l'image
   const divImage = document.createElement("div")
   divImage.className = "cart__item__img"
-  // Création de l'image du produit 
+  // Création de l'image du produit
   const productImage = document.createElement("img")
   productImage.src = productAPI.imageUrl
   productImage.alt = productAPI.altTxt
@@ -87,7 +87,7 @@ function removeArticleProduct(product, productAPI, btn) {
   article.remove()
   // Mise à jour du prix total
   totalPrice -= ((productAPI.price) * (product.quantity))
-  // Récupération de l'élement du D.O.M. ou le prix total est affichée 
+  // Récupération de l'élement du DOM ou le prix total est affichée 
   const spanTotalPrice = document.getElementById("totalPrice")
   spanTotalPrice.innerText = totalPrice
   // Mise à jour de la quantité totale
@@ -101,7 +101,7 @@ function removeArticleProduct(product, productAPI, btn) {
 }
 // Gestion de la supression du produit
 function removeProduct(product, productAPI) {
-  // Récupération de l'élément du D.O.M à supprimer
+  // Récupération de l'élément du DOM à supprimer
   const btndDelete = document.querySelector(`article[data-id="${product.id}"][data-color="${product.color}"] ` + `p[class=deleteItem ]`)
   // Ecoute du click du bouton "Supprimer"
   btndDelete.addEventListener("click", (event) => {
@@ -145,7 +145,7 @@ function changeQuantity(product, productAPI) {
     }
   })
 }
-// Cette fonction d'afficher les produits dans le D.O.M
+// Cette fonction d'afficher les produits dans le DOM
 function generateProductBasket(products) {
   // Récupération de l'élement du DOM ou le(s) produit(s) du panier seront insérer
   const sectionProducts = document.getElementById("cart__items")
@@ -160,7 +160,7 @@ function generateProductBasket(products) {
     // Création d'une balise pour afficher la couleur
     const color = document.createElement("p")
     color.innerText = productBasket.color
-    // Récupération des autres informations du produit dans l'api et affichage dans le D.O.M.
+    // Récupération des autres informations du produit dans l'api et affichage dans le DOM
     infoAPIProduct(productBasket)
     // Rattachement de la balise article à sa section
     sectionProducts.appendChild(productElement)
@@ -179,9 +179,9 @@ function checkIdentity(chaine) {
   baliseError.innerText = ""
   let validString = true
   // Création de la RegExp
-  let chaineRegExp = new RegExp("[a-zA-ZÀ-ÿ\-']{2,}")
+  let chaineRegExp = new RegExp("^[a-zA-ZÀ-ÿ\-']{2,}$")
   // Ecoute de la saisie de la chaine de caractères
-  chaine.addEventListener("change",(event)=>{
+  chaine.addEventListener("change", (event) => {
     event.preventDefault()
     baliseError.innerText = ""
     // Condition de validation de la RegExp
@@ -199,7 +199,7 @@ function checkString(chaine) {
   baliseError.innerText = ""
   let validString = true
   // Ecoute de la saisie de la chaine de caractères
-  chaine.addEventListener("input",(event)=>{
+  chaine.addEventListener("input", (event) => {
     event.preventDefault()
     baliseError.innerText = ""
     // Condition de validation de la chaine de caractère
@@ -217,9 +217,9 @@ function checkEmail(email) {
   emailBaliseError.innerText = ""
   let validString = true
   // Création de la RegExp
-  let emailRegExp = new RegExp("[a-zA-Z0-9._-]+@[a-z0-9._-]+\\.[a-z0-9._-]+")
+  let emailRegExp = new RegExp("^[a-zA-Z0-9._-]+@[a-z0-9._-]+\\.[a-z0-9._-]+$")
   // Ecoute de la saisie de la chaine de caractères
-  email.addEventListener("change",(event)=>{
+  email.addEventListener("change", (event) => {
     event.preventDefault()
     emailBaliseError.innerText = ""
     // Condition de validation de la RegExp
@@ -232,11 +232,11 @@ function checkEmail(email) {
 }
 // Création du tableau de produit(s) commandé(s)
 function generateArrayProducts() {
-  // On initailise le tableau de Produits
+  // Initialisation du tableau de Produits
   let arrayProducts = []
-  // on recupere l'ensemble des articles 
+  // Récuperation de l'ensemble des articles 
   const articles = document.querySelectorAll("article")
-  //on rajoute chaque id de produit dans le tabeau
+  // Rajout de chaque id de produit dans le tabeau
   for (let i = 0; i < articles.length; i++) {
     const articleId = articles[i].dataset.id
     arrayProducts.push(articleId)
@@ -244,7 +244,7 @@ function generateArrayProducts() {
   return arrayProducts
 }
 // Gestion de l'envoi du formulaire : validité des informations utilisateurs et récupération du numéro de commmande
-function gererFormulaire() { 
+function gererFormulaire() {
   // Récupération des éléments du DOM qui contiennent les données de l'utilisateur
   let prenom = document.getElementById("firstName")
   let nom = document.getElementById("lastName")
@@ -259,11 +259,11 @@ function gererFormulaire() {
   let emailValide = checkEmail(email)
   // Récuperation de l'élement du DOM du formulaire de commande
   let form = document.querySelector("form")
-  // On ecoute l'envoi du formuaire
+  // Ecoute de l'envoi du formuaire
   form.addEventListener("submit", (event) => {
     event.preventDefault()
     if (prenomValide && nomValide && adresseValide && villeValide && emailValide) {
-    // Récupération de la liste de produit(s) commandé(s)
+      // Récupération de la liste de produit(s) commandé(s)
       let listProducts = generateArrayProducts()
       // Création de l'objet qui contient le données de l'objet contact et de la liste d'Id des produits commandés
       const objCommand = {
@@ -284,17 +284,17 @@ function gererFormulaire() {
         headers: { "Content-Type": "application/json" },
         body: chargeUtile
       })
-      .then(response => response.json())
-      //Récupération du numero de commande de la reponse
-      .then(data =>{
-        const orderId = data.orderId
-        // Redirection de l'utilisateur vers la page de confirmation. Le numéro de commande est inscrit dans l'adresse
-        window.location.href = `./confirmation.html?id=${orderId}`
-      })
+        .then(response => response.json())
+        //Récupération du numero de commande de la reponse
+        .then(data => {
+          const orderId = data.orderId
+          // Redirection de l'utilisateur vers la page de confirmation. Le numéro de commande est inscrit dans l'adresse
+          window.location.href = `./confirmation.html?id=${orderId}`
+        })
     } else {
       alert("Vérifiez que toutes vos informations soient valides")
     }
   })
-}    
+}
 
 gererFormulaire()

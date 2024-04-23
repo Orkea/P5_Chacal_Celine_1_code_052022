@@ -5,7 +5,7 @@ let productId = productUrl.searchParams.get("id")
 // Récupération des détails d'un produit
 const reponse = await fetch("http://localhost:3000/api/products/" + productId)
 const product = await reponse.json()
-// Récupération de l'élements du D.O.M qui acueillent le logo d'un canapé
+// Récupération de l'élements du DOM qui acueillent le logo d'un canapé
 const logo = document.querySelector(".item__img")
 const logoProduct = document.createElement("img")
 logoProduct.src = product.imageUrl
@@ -22,7 +22,7 @@ descriptionProduct.innerText = product.description
 // On rajoute les couleurs
     // On récuèere la liste des couleurs
     const colorsProduct = product.colors
-    // On récupere l'élement du D.O.M. qui accueille les couleurs
+    // On récupere l'élement du DOM qui accueille les couleurs
     const sectionColors = document.getElementById("colors")
     for(let i=0; i<colorsProduct.length; i++){
         // On ajoute la balise option avec sa couleur
@@ -60,13 +60,13 @@ function addBasket(product){
                 }
                 // On sauvegarde le nouveau panier
                 saveBasket(basket)
-                // alert("Vous avez ajouté un/des article(s) dans votre panier")
+                alert("Vous avez ajouté un/des article(s) dans votre panier")
     }else{
         alert("Veuillez entrer un nombre d'article (1-100)")
     }
 }
 
-// On recupère la balise du D.O.M. qui gérer l'ajout au panier
+// On recupère la balise du DOM qui gérer l'ajout au panier
 const btnAddBasket = document.querySelector("button")
 //On écoute le click sur le btn "Ajouter au panier"
 btnAddBasket.addEventListener("click", (event)=>{
@@ -81,7 +81,6 @@ btnAddBasket.addEventListener("click", (event)=>{
             quantity: document.getElementById("quantity").valueAsNumber
         }
         addBasket(productBasket)
-        alert("Votre article  a été ajouter dans votre panier")
     }else{
         alert("Veuillez sélectionnez une couleur")
     }

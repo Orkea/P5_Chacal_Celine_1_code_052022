@@ -3,7 +3,7 @@ const reponse = await fetch("http://localhost:3000/api/products")
 const products = await reponse.json()
 
 function generateProduct() {
-    // Récupération de l'élément du D.O.M qui accueillera les fiches produits
+    // Récupération de l'élément du DOM qui accueillera les fiches produits
     const sectionFichesProduits = document.querySelector(".items")
     for (let i = 0; i < products.length; i++){
         const product = products[i];
@@ -22,7 +22,7 @@ function generateProduct() {
         const descriptionElement = document.createElement("p")
         descriptionElement.innerText = product.description
         descriptionElement.classList.add("productDescription")
-        // On rattache la balise article a la section 
+        // Rattachement de la balise article à sa section 
         sectionFichesProduits.appendChild(lienProduits)
         lienProduits.appendChild(produitElement)
         produitElement.appendChild(imageElement)
